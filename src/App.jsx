@@ -14,6 +14,8 @@ import LockerMarkers from './LockerMarkers'
 
 import { useEffect, useState } from 'react'
 import getLocation from './utils/get-location'
+import { Marker } from 'react-map-gl'
+import PinIcon from './PinIcon'
 
 const identityPoolId = import.meta.env.VITE_IDENTITY_POOL_ID
 const region = import.meta.env.VITE_REGION
@@ -64,13 +66,13 @@ export default () => {
 
   console.log({ location })
 
-  return (
+  return location.latitude && location.longitude ? (
     <Map
       // See https://visgl.github.io/react-map-gl/docs/api-reference/map
       initialViewState={{
         latitude: location.latitude,
         longitude: location.longitude,
-        zoom: 11
+        zoom: 15
       }}
       style={{ height: '100vh', width: '100vw' }}
       mapStyle={`https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${mapName}/style-descriptor`}
@@ -80,6 +82,16 @@ export default () => {
 
       {/* Render markers for all lockers, with a popup for the selected locker */}
       <LockerMarkers lockers={lockers} />
+
+      {/* Marker for current location */}
+      <Marker latitude={location.latitude} longitude={location.longitude}>
+        <div>
+          {/* You can use an image or an icon here */}
+          <PinIcon size='40' isSelected={true} />
+        </div>
+      </Marker>
     </Map>
+  ) : (
+    <div>loading...</div>
   )
 }
