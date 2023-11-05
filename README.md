@@ -7,9 +7,12 @@ In order to retrieve the required information for global real time map with mark
 ## Resources to create a Website
 
 1. [`AmazonLocationServiceAPI`](https://location.aws.com/sample/react-map-with-markers) : To display real-time map on a website
-2. [`OpenWeatherAPI`](https://openweathermap.org/api): To retrieve data related to the weather
-3. [`WorldAPI`](https://worldapi.com/): To get the latest news of a clicked location
-4. [`ChatBot`](https://www.chatbase.co/): To further assist users for their concerns
+2. React.js with Vite
+3. TailWind CSS
+4. [`react-hot-toast`](https://react-hot-toast.com/docs) to display toast messages
+5. [`OpenWeatherAPI`](https://openweathermap.org/api): To retrieve data related to the weather
+6. [`WorldAPI`](https://worldapi.com/): To get the latest news of a clicked location
+7. [`ChatBot`](https://www.chatbase.co/): To further assist users for their concerns
 
 ## Prerequisites
 

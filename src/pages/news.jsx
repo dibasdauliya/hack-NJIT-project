@@ -3,10 +3,11 @@ import Container from '../components/Container'
 import LeftArrow from '../icons/LeftArrow'
 import { Link, useSearchParams } from 'react-router-dom'
 import PageLayout from '../components/PageLayout'
+import { getMeters } from '../utils/get-meters'
 
 export default function Other() {
   const [news, setNews] = useState([])
-  const [radius, setRadius] = useState(60000)
+  const [radius, setRadius] = useState(37)
 
   const [queryParameters] = useSearchParams()
 
@@ -37,9 +38,9 @@ export default function Other() {
       const response = await fetch(
         `https://api.worldapi.com/reports?lat=${
           latFromQuery || coords.latitude
-        }&lon=${
-          longFromQuery || coords.longitude
-        }&radius=${radius}&min_time=1698456425&api_key=${
+        }&lon=${longFromQuery || coords.longitude}&radius=${getMeters(
+          radius
+        )}&min_time=1698456425&api_key=${
           import.meta.env.VITE_WORLD_API_KEY
         }&limit=5`
       )
@@ -82,10 +83,12 @@ export default function Other() {
               value={radius}
               onChange={(e) => setRadius(e.target.value)}
             />
+            <br />
+            <small className='text-gray-200'>in miles</small>
           </div>
 
           <button
-            className='bg-[#9ae2eb] px-4 rounded-full hover:brightness-125 transition-all'
+            className='bg-[#9ae2eb] px-4 rounded-full hover:brightness-105 transition-all inline-block h-12'
             type='button'
             onClick={handleRadiusSubmit}>
             Search by radius

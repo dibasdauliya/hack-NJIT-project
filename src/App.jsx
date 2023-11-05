@@ -134,7 +134,7 @@ export default () => {
 
   return location.latitude && location.longitude ? (
     <>
-      <div className='fixed left-4 top-4 bg-black/5 backdrop-blur-md p-4 m-4 flex gap-4 justify-center z-[999] rounded-full font-semibold text-lg'>
+      <div className='fixed left-4 top-4 bg-black/5 backdrop-blur-md p-4 m-4 flex gap-4 justify-center z-[999] rounded-full font-semibold lg:text-lg flex-wrap'>
         <span className='text-[#2377a4]'>WNews Location</span> |
         <span>Wind direction: {weatherData?.wind} miles/hour</span>
         <span>Temperature: {weatherData?.temperature}°F</span>
@@ -165,7 +165,7 @@ export default () => {
       </div>
 
       <div
-        className='fixed top-4 right-4 z-[999] bg-black/50 backdrop-blur-md p-4 m-4 rounded-full text-white cursor-pointer'
+        className='fixed top-4 right-4 z-[999] bg-black/50 backdrop-blur-md p-4 m-4 rounded-full text-white cursor-pointer hover:brightness-125 transition-all'
         onClick={() => setIsNavOpen(!isNavOpen)}>
         {isNavOpen ? <Cross /> : <Ham />}
       </div>
