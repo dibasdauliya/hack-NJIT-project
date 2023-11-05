@@ -10,9 +10,6 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import LockerMarkers from './LockerMarkers'
 
 import { useEffect, useState } from 'react'
-import getLocation from './utils/get-location'
-import { Marker } from 'react-map-gl'
-import PinIcon from './PinIcon'
 import Ham from './icons/Ham'
 import Cross from './icons/cross'
 import { Link } from 'react-router-dom'
@@ -96,13 +93,6 @@ export default () => {
     })
   )
 
-  // wind: data.wind.speed,
-  // windDeg: data.wind.deg,
-  // temperature: data.main.temp,
-  // humidity: data.main.humidity,
-  // sunset: data.sys.sunset,
-  // city: data.name
-
   function fetchWeatherData(lat, lng) {
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${
@@ -136,7 +126,7 @@ export default () => {
   }
 
   function handleMapClick(event) {
-    console.log(event.lngLat)
+    // console.log(event.lngLat)
 
     // open weather API
     fetchWeatherData(event.lngLat.lat, event.lngLat.lng)

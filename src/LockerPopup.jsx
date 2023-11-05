@@ -31,12 +31,6 @@ export default ({
       onClose={onClose}
       anchor='bottom'>
       <>
-        {/* wind,
-      windDeg,
-      temperature,
-      humidity,
-      sunset,
-      city */}
         <Link
           to={`/news?lat=${latitude}&long=${longitude}`}
           className='underline inline-block mb-2 text-base'>

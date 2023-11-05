@@ -10,7 +10,7 @@ export default function Other() {
 
   const [queryParameters] = useSearchParams()
 
-  console.log({ queryParameters })
+  // console.log({ queryParameters })
 
   async function fetchNews() {
     try {
@@ -50,7 +50,7 @@ export default function Other() {
 
       const data = await response.json()
       setNews(data.reports)
-      console.log(data)
+      // console.log(data)
     } catch (error) {
       alert(error.message)
     }
@@ -63,7 +63,7 @@ export default function Other() {
   function handleRadiusSubmit(e) {
     fetchNews()
     e.preventDefault()
-    console.log('12')
+    // console.log('12')
   }
 
   return (
