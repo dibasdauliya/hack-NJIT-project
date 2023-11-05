@@ -6,9 +6,6 @@ import { withIdentityPoolId } from '@aws/amazon-location-utilities-auth-helper'
 
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-// Amazon Hub Lockers in Vancouver as a GeoJSON FeatureCollection
-import lockerGeoJSON from './lockers.json'
-
 // React Component that renders markers for all provided lockers
 import LockerMarkers from './LockerMarkers'
 
@@ -32,9 +29,11 @@ export default () => {
   const [location, setLocation] = useState({ latitude: null, longitude: null })
   const [error, setError] = useState(null)
 
-  const [isNavOpen, setIsNavOpen] = useState(true)
+  const [isNavOpen, setIsNavOpen] = useState(false)
 
   const [lockersData, setLockers] = useState([])
+
+  const [weatherData, setWeatherData] = useState({})
 
   const getLocation = () => {
     if (!navigator.geolocation) {
@@ -42,35 +41,22 @@ export default () => {
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          const lat = position.coords.latitude
+          const lng = position.coords.longitude
           setLocation({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
+            latitude: lat,
+            longitude: lng
           })
-
-          setLockers((p) => [
-            ...p,
-            {
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  position.coords.longitude,
-                  position.coords.latitude
-                ]
-              },
-              properties: {
-                title: 'New Locker',
-                address: 'New Locker'
-              }
-            }
-          ])
 
           localStorage.setItem(
             'coordinates',
             JSON.stringify({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude
+              latitude: lat,
+              longitude: lng
             })
           )
+
+          fetchWeatherData(lat, lng)
         },
         () => {
           alert('Unable to retrieve your location')
@@ -88,47 +74,86 @@ export default () => {
       geometry: {
         coordinates: [longitude, latitude]
       },
-      properties: { title, address: description }
+      properties: {
+        wind,
+        windDeg,
+        temperature,
+        humidity,
+        sunset,
+        city,
+        sunrise
+      }
     }) => ({
       latitude,
       longitude,
-      title,
-      description
+      wind,
+      windDeg,
+      temperature,
+      humidity,
+      sunset,
+      city,
+      sunrise
     })
   )
+
+  // wind: data.wind.speed,
+  // windDeg: data.wind.deg,
+  // temperature: data.main.temp,
+  // humidity: data.main.humidity,
+  // sunset: data.sys.sunset,
+  // city: data.name
+
+  function fetchWeatherData(lat, lng) {
+    fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${
+        import.meta.env.VITE_OPENWEATHER
+      }&units=imperial`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const weatherData = {
+          wind: data.wind.speed,
+          windDeg: data.wind.deg,
+          temperature: data.main.temp,
+          humidity: data.main.humidity,
+          sunset: data.sys.sunset,
+          sunrise: data.sys.sunrise,
+          city: data.name
+        }
+        setWeatherData(weatherData)
+
+        setLockers((p) => [
+          ...p,
+          {
+            geometry: {
+              type: 'Point',
+              coordinates: [lng, lat]
+            },
+            properties: weatherData
+          }
+        ])
+      })
+  }
 
   function handleMapClick(event) {
     console.log(event.lngLat)
 
-    setLockers((p) => [
-      ...p,
-      {
-        geometry: {
-          type: 'Point',
-          coordinates: [event.lngLat.lng, event.lngLat.lat]
-        },
-        properties: {
-          title: 'New Locker',
-          address: 'New Locker'
-        }
-      }
-    ])
+    // open weather API
+    fetchWeatherData(event.lngLat.lat, event.lngLat.lng)
   }
-
-  console.log({ location })
 
   return location.latitude && location.longitude ? (
     <>
-      <div className='fixed left-4 top-4 bg-black/5 backdrop-blur-md p-4 m-4 flex gap-8 justify-center z-[999] rounded-full font-semibold text-lg'>
-        <span>Wind: 123</span>
-
-        <span>Temperature: 123</span>
+      <div className='fixed left-4 top-4 bg-black/5 backdrop-blur-md p-4 m-4 flex gap-4 justify-center z-[999] rounded-full font-semibold text-lg'>
+        <span className='text-[#2377a4]'>WNews Location</span> |
+        <span>Wind direction: {weatherData?.wind} miles/hour</span>
+        <span>Temperature: {weatherData?.temperature}°F</span>
       </div>
 
       <div
         className={`h-full fixed right-0 w-[300px] z-[999] bg-black/5 p-4 backdrop-blur-md transition-transform ${
           isNavOpen ? 'translate-x-0' : 'translate-x-full'
-        } h-full grid place-items-center`}>
+        } h-full grid place-items-center lg:text-lg`}>
         <ul className='space-y-8 text-center'>
           <li>
             <Link to='/news' className='inline-block hover:underline'>
@@ -146,6 +171,7 @@ export default () => {
             </Link>
           </li>
         </ul>
+        <small className='text-gray-600'>&copy; WNews Location</small>
       </div>
 
       <div
@@ -173,24 +199,11 @@ export default () => {
 
         {/* Render markers for all lockers, with a popup for the selected locker */}
         <LockerMarkers lockers={lockers} />
-
-        {/* Marker for current location */}
-        {/* <Marker
-          latitude={location.latitude}
-          longitude={location.longitude}
-          onClick={(e) => {
-            e.originalEvent.stopPropagation()
-            alert(12)
-          }}>
-          <div>
-            <PinIcon size='40' isSelected={true} />
-          </div>
-        </Marker> */}
       </Map>
     </>
   ) : (
     <div className='w-full h-screen grid place-items-center text-2xl animate-pulse font-semibold'>
-      Loading...
+      Loading map...
     </div>
   )
 }

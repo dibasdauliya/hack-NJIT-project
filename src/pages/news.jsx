@@ -2,97 +2,98 @@ import React, { useEffect, useState } from 'react'
 import Container from '../components/Container'
 import LeftArrow from '../icons/LeftArrow'
 import { Link, useSearchParams } from 'react-router-dom'
+import PageLayout from '../components/PageLayout'
 
 export default function Other() {
   const [news, setNews] = useState([])
-  const [location, setLocation] = useState({ latitude: null, longitude: null })
-  const [error, setError] = useState(null)
+  const [radius, setRadius] = useState(60000)
 
   const [queryParameters] = useSearchParams()
 
   console.log({ queryParameters })
 
-  useEffect(() => {
-    async function fetchNews() {
-      try {
-        let coords = localStorage.getItem('coordinates')
-        if (!coords) {
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject)
-          })
+  async function fetchNews() {
+    try {
+      let coords = localStorage.getItem('coordinates')
+      if (!coords) {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject)
+        })
 
-          coords = {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }
-
-          localStorage.setItem('coordinates', JSON.stringify(coords))
-        } else {
-          coords = JSON.parse(coords)
+        coords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
         }
 
-        // see if there are any query parameters
-        const latFromQuery = queryParameters.get('lat')
-        const longFromQuery = queryParameters.get('long')
-
-        const response = await fetch(
-          `https://api.worldapi.com/reports?lat=${
-            latFromQuery || coords.latitude
-          }&lon=${
-            longFromQuery || coords.longitude
-          }&radius=60000&min_time=1698456425&api_key=${
-            import.meta.env.VITE_WORLD_API_KEY
-          }&limit=5`
-        )
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-
-        const data = await response.json()
-        setNews(data.reports)
-        console.log(data)
-      } catch (error) {
-        setError(error.message)
+        localStorage.setItem('coordinates', JSON.stringify(coords))
+      } else {
+        coords = JSON.parse(coords)
       }
-    }
 
+      // see if there are any query parameters
+      const latFromQuery = queryParameters.get('lat')
+      const longFromQuery = queryParameters.get('long')
+
+      const response = await fetch(
+        `https://api.worldapi.com/reports?lat=${
+          latFromQuery || coords.latitude
+        }&lon=${
+          longFromQuery || coords.longitude
+        }&radius=${radius}&min_time=1698456425&api_key=${
+          import.meta.env.VITE_WORLD_API_KEY
+        }&limit=5`
+      )
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      const data = await response.json()
+      setNews(data.reports)
+      console.log(data)
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
+  useEffect(() => {
     fetchNews()
   }, [])
 
-  return (
-    <div className='bg-hero-pattern bg-fixed'>
-      <header className='text-white'>
-        <Container>
-          <Link
-            to={'/'}
-            className='flex items-center gap-3 bg-black w-fit p-2 rounded-md hover:brightness-150'>
-            <LeftArrow /> Go to Home
-          </Link>
-        </Container>
-      </header>
+  function handleRadiusSubmit(e) {
+    fetchNews()
+    e.preventDefault()
+    console.log('12')
+  }
 
+  return (
+    <PageLayout>
       <Container>
         <h1 className='text-2xl font-bold my-4 text-white'>
           Latest News Near You!
         </h1>
 
-        {/* <section className='flex gap-8 mt-8'>
+        <section className='flex gap-8 mt-8'>
           <div>
             <input
               type='number'
               placeholder='Enter radius in miles'
               className='p-3 rounded-md'
+              value={radius}
+              onChange={(e) => setRadius(e.target.value)}
             />
           </div>
 
-          <button className='bg-[#9ae2eb] px-4 rounded-full hover:brightness-125 transition-all'>
-            Search
+          <button
+            className='bg-[#9ae2eb] px-4 rounded-full hover:brightness-125 transition-all'
+            type='button'
+            onClick={handleRadiusSubmit}>
+            Search by radius
           </button>
-        </section> */}
+        </section>
 
         <section className='flex gap-3 flex-wrap mt-8'>
-          {news?.length > 0 &&
+          {news?.length > 0 ? (
             news.map(
               (
                 { claim, summary, source_citation_url, source_image_url },
@@ -117,7 +118,7 @@ export default function Other() {
                         <a
                           href={source_citation_url}
                           target='_blank'
-                          className='underline'
+                          className='underline break-words'
                           rel='noreferrer'>
                           {source_citation_url}
                         </a>
@@ -126,9 +127,12 @@ export default function Other() {
                   </div>
                 </div>
               )
-            )}
+            )
+          ) : (
+            <p className='text-white text-lg font-semibold'>No news found</p>
+          )}
         </section>
       </Container>
-    </div>
+    </PageLayout>
   )
 }
