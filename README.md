@@ -1,17 +1,22 @@
-# Display markers on a web map using React
+# React Map Application with AWS Location Service
 
-This example demonstrates how to display markers on a web map using [React](https://react.dev/), [react-map-gl](https://visgl.github.io/react-map-gl/), and [Amazon Location's authentication helper](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js). It uses [Amazon Location Service's Maps](https://aws.amazon.com/location/) as the base map provider and [MapLibre GL
-JS](https://maplibre.org/maplibre-gl-js-docs/api/) (via [react-map-gl](https://visgl.github.io/react-map-gl/)) as the map rendering library with authentication managed by [Amazon Location's authentication helper](https://github.com/aws-geospatial/amazon-location-utilities-auth-helper-js).
+App features includes displaying weather, temperature, wind and its direction, sunrise, and sunset of a specified pointer on a map that also displays an option to show related news nearby same location.
 
-## Create resources
+In order to retrieve the required information for global real time map with markers, we, at first, used the [`Amazon Location Service`](https://github.com/aws-geospatial/amazon-location-samples-js.git) and cloned the provided repository for location service via github and started building our projects with other necessary APIs.
 
-Click the button below to create the necessary AWS resources for this sample app to run. It will
-open the AWS Management Console and initiate the CloudFormation template deployment process.
+## Resources to create a Website
 
-[![Launch Stack](https://amazon-location-cloudformation-templates.s3.us-west-2.amazonaws.com/cfn-launch-stack-button.svg)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?stackName=react-map-with-markers-example&templateURL=https://amazon-location-cloudformation-templates.s3.us-west-2.amazonaws.com/samples/web-react-map-with-markers/template.yaml)
+1. [`AmazonLocationServiceAPI`](https://location.aws.com/sample/react-map-with-markers) : To display real-time map on a website
+2. [`OpenWeatherAPI`](https://openweathermap.org/api): To retrieve data related to the weather
+3. [`WorldAPI`](https://worldapi.com/): To get the latest news of a clicked location 4.[`ChatBot`](https://www.chatbase.co/): To further assist users for their concerns
 
-Once the deployment process is complete, go to the **Outputs** section to get the Amazon Cognito
-Identity Pool ID, AWS Region, and Map resource name.
+## Prerequisites
+
+Before getting started, ensure that you have the following set up:
+
+- Node.js installed on your machine.
+- An AWS account with Amazon Location Service configured.
+- Geolocation supports in your browser.
 
 ## Configure
 
@@ -28,23 +33,6 @@ example and open it in a browser.
 To remove all of the resources created in this walkthrough, delete the CloudFormation stack named
 `react-map-with-markers`.
 
-## Get help
-
-- Have a bug to report? [Open an
-  issue](https://github.com/aws-geospatial/code-example-web-react-map-with-markers/issues/new). If
-  possible, include details about your development environment, and an example that shows the issue.
-- Have an example request? [Open an
-  issue](https://github.com/aws-samples/amazon-location-samples/issues/new). Tell us what the
-  example should do and why you want it.
-
-## Contribute
-
-See [CONTRIBUTING](../CONTRIBUTING.md) for more information.
-
-## Security
-
-See [CONTRIBUTING](../CONTRIBUTING.md#security-issue-notifications) for more information.
-
 ## License
 
-This library is licensed under the MIT-0 License. See the [LICENSE](../LICENSE) file.
+This library is licensed under the MIT-0 License.
