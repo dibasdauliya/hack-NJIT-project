@@ -2,13 +2,14 @@
 
 App features includes displaying weather, temperature, wind and its direction, sunrise, and sunset of a specified pointer on a map that also displays an option to show related news nearby same location.
 
-In order to retrieve the required information for global real time map with markers, we, at first, used the [`Amazon Location Service`](https://github.com/aws-geospatial/amazon-location-samples-js.git) and cloned the provided repository for location service via github and started building our projects with other necessary APIs.
+In order to retrieve the required information for global real time map with markers, we, at first, used the [`Amazon Location Service`](https://github.com/aws-geospatial/amazon-location-samples-js.git) and cloned the provided repository for location service via GitHub and started building our projects with other necessary APIs.
 
 ## Resources to create a Website
 
 1. [`AmazonLocationServiceAPI`](https://location.aws.com/sample/react-map-with-markers) : To display real-time map on a website
 2. [`OpenWeatherAPI`](https://openweathermap.org/api): To retrieve data related to the weather
-3. [`WorldAPI`](https://worldapi.com/): To get the latest news of a clicked location 4.[`ChatBot`](https://www.chatbase.co/): To further assist users for their concerns
+3. [`WorldAPI`](https://worldapi.com/): To get the latest news of a clicked location
+4. [`ChatBot`](https://www.chatbase.co/): To further assist users for their concerns
 
 ## Prerequisites
 
