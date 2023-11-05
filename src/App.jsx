@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import Ham from './icons/Ham'
 import Cross from './icons/cross'
 import { Link } from 'react-router-dom'
+import toast, { Toaster } from 'react-hot-toast'
 
 const identityPoolId = import.meta.env.VITE_IDENTITY_POOL_ID
 const region = import.meta.env.VITE_REGION
@@ -24,7 +25,6 @@ const authHelper = await withIdentityPoolId(identityPoolId)
 
 export default () => {
   const [location, setLocation] = useState({ latitude: null, longitude: null })
-  const [error, setError] = useState(null)
 
   const [isNavOpen, setIsNavOpen] = useState(false)
 
@@ -32,9 +32,11 @@ export default () => {
 
   const [weatherData, setWeatherData] = useState({})
 
+  const [showToast, setShowToast] = useState(true)
+
   const getLocation = () => {
     if (!navigator.geolocation) {
-      setError('Geolocation is not supported by your browser')
+      toast.error('Geolocation is not supported by your browser')
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -56,7 +58,7 @@ export default () => {
           fetchWeatherData(lat, lng)
         },
         () => {
-          alert('Unable to retrieve your location')
+          toast.error('Unable to retrieve your location')
         }
       )
     }
@@ -126,9 +128,15 @@ export default () => {
   }
 
   function handleMapClick(event) {
-    // console.log(event.lngLat)
-
     // open weather API
+    if (showToast) {
+      toast(
+        'Click at the marker to view more details about the weather and news!',
+        { duration: 5000, style: { zIndex: 999999 } }
+      )
+    }
+    setShowToast(false)
+
     fetchWeatherData(event.lngLat.lat, event.lngLat.lng)
   }
 
@@ -190,6 +198,7 @@ export default () => {
         {/* Render markers for all lockers, with a popup for the selected locker */}
         <LockerMarkers lockers={lockers} />
       </Map>
+      <Toaster position='bottom-left' />
     </>
   ) : (
     <div className='w-full h-screen grid place-items-center text-2xl animate-pulse font-semibold'>
